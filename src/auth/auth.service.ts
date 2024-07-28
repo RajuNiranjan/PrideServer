@@ -22,15 +22,20 @@ export class AuthService {
     try {
       const { userName, email, password } = signUpDto;
 
+      const user = await this.userService.findOne({ email });
+      if (user) {
+        throw new UnauthorizedException('email already existed');
+      }
+
       const hashPassword = await bcrypt.hash(password, 10);
 
-      const user = await this.userService.create({
+      const newUser = await this.userService.create({
         userName,
         email,
         password: hashPassword,
       });
 
-      const token = this.jwtService.sign({ id: user._id });
+      const token = this.jwtService.sign({ id: newUser._id });
       return { token };
     } catch (error) {
       console.log(error);
