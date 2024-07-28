@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
@@ -37,14 +41,16 @@ export class AuthService {
   async logIn(logInDto: LoginDto): Promise<{ token: string }> {
     try {
       const { email, password } = logInDto;
+
       const user = await this.userService.findOne({ email });
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new UnauthorizedException('User not found');
       }
-      const verifyPassword = bcrypt.compare(password, user.password);
+
+      const verifyPassword = await bcrypt.compare(password, user.password);
 
       if (!verifyPassword) {
-        throw new NotFoundException('Invalid email or password ');
+        throw new UnauthorizedException('Invalid email or password ');
       }
 
       const token = this.jwtService.sign({ id: user._id });
