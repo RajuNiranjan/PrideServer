@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { User } from './schema/user.schema';
@@ -20,5 +20,13 @@ export class AuthController {
     @Body() logInDto: LogInDto,
   ): Promise<{ token: string; user: Partial<User> }> {
     return this.authService.login(logInDto);
+  }
+
+  @Patch('/updateprofile/:id')
+  updateProfile(
+    @Param('id') id: string,
+    @Body() updateUserDto: CreateUserDto,
+  ): Promise<{ user: Partial<User> }> {
+    return this.authService.updateUser(id, updateUserDto);
   }
 }

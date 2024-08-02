@@ -1,4 +1,9 @@
-import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
@@ -80,6 +85,42 @@ export class AuthService {
       delete userObj.password;
 
       return { token, user: userObj };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async updateUser(
+    id: string,
+    updateUserDto: CreateUserDto,
+  ): Promise<{ user: Partial<User> }> {
+    try {
+      const { userName, email, password } = updateUserDto;
+
+      const user = await this.userModel.findById(id);
+      if (!user) {
+        throw new NotFoundException('user not found');
+      }
+      const hashPassword = await bcrypt.hash(password, 10);
+
+      const updateUser = await this.userModel.findByIdAndUpdate(
+        id,
+        {
+          userName,
+          email,
+          password: hashPassword,
+        },
+        {
+          new: true,
+        },
+      );
+
+      const userObj = updateUser.toObject();
+
+      delete userObj.password;
+
+      return { user: userObj };
     } catch (error) {
       console.log(error);
       throw error;
