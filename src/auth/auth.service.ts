@@ -16,7 +16,7 @@ export class AuthService {
 
   async register(
     createUserDto: CreateUserDto,
-  ): Promise<{ token: string; user: User }> {
+  ): Promise<{ token: string; user: Partial<User> }> {
     try {
       const { userName, email, password } = createUserDto;
 
@@ -35,13 +35,20 @@ export class AuthService {
       });
 
       const token = this.jwtService.sign({ id: newUser._id });
-      return { token, user: newUser };
+
+      const userObject = newUser.toObject();
+
+      delete userObject.password;
+
+      return { token, user: userObject };
     } catch (error) {
       console.log(error);
     }
   }
 
-  async login(logInDto: LogInDto): Promise<{ token: string; user: User }> {
+  async login(
+    logInDto: LogInDto,
+  ): Promise<{ token: string; user: Partial<User> }> {
     try {
       const { email, password } = logInDto;
 
@@ -59,7 +66,11 @@ export class AuthService {
 
       const token = this.jwtService.sign({ id: user._id });
 
-      return { token, user: user };
+      const userObj = user.toObject();
+
+      delete userObj.password;
+
+      return { token, user: userObj };
     } catch (error) {
       console.log(error);
     }

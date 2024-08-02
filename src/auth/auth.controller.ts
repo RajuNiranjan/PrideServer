@@ -11,12 +11,14 @@ export class AuthController {
   @Post('/register')
   register(
     @Body() createUserDto: CreateUserDto,
-  ): Promise<{ token: string; user: User }> {
+  ): Promise<{ token: string; user: Partial<User> }> {
     return this.authService.register(createUserDto);
   }
 
   @Post('/login')
-  logIn(@Body() logInDto: LogInDto): Promise<{ token: string; user: User }> {
+  logIn(
+    @Body() logInDto: LogInDto,
+  ): Promise<{ token: string; user: Partial<User> }> {
     return this.authService.login(logInDto);
   }
 }
