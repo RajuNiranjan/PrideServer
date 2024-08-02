@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { User } from './schema/user.schema';
@@ -28,5 +28,10 @@ export class AuthController {
     @Body() updateUserDto: CreateUserDto,
   ): Promise<{ user: Partial<User> }> {
     return this.authService.updateUser(id, updateUserDto);
+  }
+
+  @Delete('/deleteuser/:id')
+  deleteUser(@Param('id') id: string): Promise<User> {
+    return this.authService.deleteUser(id);
   }
 }

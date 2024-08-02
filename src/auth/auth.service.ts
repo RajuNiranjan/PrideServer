@@ -126,4 +126,12 @@ export class AuthService {
       throw error;
     }
   }
+
+  async deleteUser(id: string): Promise<User> {
+    try {
+      return await this.userModel.findByIdAndDelete(id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
