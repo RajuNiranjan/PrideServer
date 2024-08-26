@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -18,6 +19,19 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
   ) {}
+
+  async getUser(token: string): Promise<{ user: Partial<User> }> {
+    if (!token) throw new BadRequestException('token is missing');
+    const userInfo = this.jwtService.verify(token);
+    const user = await this.userModel.findById(userInfo.id);
+    if (!user) return null;
+    return {
+      user: {
+        userName: user.userName,
+        email: user.email,
+      },
+    };
+  }
 
   async register(
     createUserDto: CreateUserDto,
@@ -44,12 +58,7 @@ export class AuthService {
       });
 
       const token = this.jwtService.sign({ id: newUser._id });
-
-      const userObject = newUser.toObject();
-
-      delete userObject.password;
-
-      return { token, user: userObject };
+      return { token, ...(await this.getUser(token)) };
     } catch (error) {
       console.log(error);
       throw error;

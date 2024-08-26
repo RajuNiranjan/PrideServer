@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { User } from './schema/user.schema';
@@ -18,8 +27,16 @@ export class AuthController {
   @Post('/login')
   logIn(
     @Body() logInDto: LogInDto,
+    @Req() req: Request,
   ): Promise<{ token: string; user: Partial<User> }> {
+    const token = req.headers['Authorization'];
     return this.authService.login(logInDto);
+  }
+
+  @Get('user')
+  user(@Req() req: Request): Promise<{ user: Partial<User> }> {
+    const token = req.headers['authorization'];
+    return this.authService.getUser(token);
   }
 
   @Patch('/updateprofile/:id')
