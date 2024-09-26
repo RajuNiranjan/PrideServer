@@ -50,18 +50,15 @@ export class AuthenticationService {
   }
 
   async logIn(loginDto: LogInDto): Promise<{ token: string }> {
-    const { identifier, password } = loginDto;
+    const { usernameOremail, password } = loginDto;
     let user: User | null = null;
 
-    // Check if the identifier is an email
-    if (/\S+@\S+\.\S+/.test(identifier)) {
-      user = await this.userModel.findOne({ email: identifier }).exec();
-    } else if (/^\+?\d{10,15}$/.test(identifier)) {
-      // Check if the identifier is a phone number
-      user = await this.userModel.findOne({ mobileNumber: identifier }).exec();
+    // Check if the usernameOremail is an email
+    if (/\S+@\S+\.\S+/.test(usernameOremail)) {
+      user = await this.userModel.findOne({ email: usernameOremail }).exec();
     } else {
       // Otherwise, assume it's a username
-      user = await this.userModel.findOne({ userName: identifier }).exec();
+      user = await this.userModel.findOne({ userName: usernameOremail }).exec();
     }
 
     if (!user) {

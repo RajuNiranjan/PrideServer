@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class LogInDto {
   @IsNotEmpty()
   @IsString()
-  identifier: string;
+  usernameOremail: string;
 
   @IsNotEmpty()
   @IsString()
