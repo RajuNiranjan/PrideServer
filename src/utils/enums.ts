@@ -1,0 +1,16 @@
+export enum GenderIdentity {
+  LESBIAN = 'Lesbian',
+  GAY = 'Gay',
+  BISEXUAL = 'Bisexual',
+  TRANSGENDER = 'Transgender',
+  TRANS_MAN = 'Trans Man',
+  TRANS_WOMAN = 'Trans Woman',
+  NON_BINARY = 'Non-Binary',
+  GENDERQUEER = 'Genderqueer',
+  GENDERFLUID = 'Genderfluid',
+  AGENDER = 'Agender',
+  TWO_SPIRIT = 'Two-Spirit',
+  INTERSEX = 'Intersex',
+  QUEER = 'Queer',
+  OTHER = 'Other',
+}
