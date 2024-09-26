@@ -1,10 +1,15 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signup.dto';
 import * as bcrypt from 'bcrypt';
+import { LogInDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -41,6 +46,34 @@ export class AuthenticationService {
     });
 
     const token = this.jwtService.sign({ id: newUser._id });
+    return { token };
+  }
+
+  async logIn(loginDto: LogInDto): Promise<{ token: string }> {
+    const { identifier, password } = loginDto;
+    let user: User | null = null;
+
+    // Check if the identifier is an email
+    if (/\S+@\S+\.\S+/.test(identifier)) {
+      user = await this.userModel.findOne({ email: identifier }).exec();
+    } else if (/^\+?\d{10,15}$/.test(identifier)) {
+      // Check if the identifier is a phone number
+      user = await this.userModel.findOne({ mobileNumber: identifier }).exec();
+    } else {
+      // Otherwise, assume it's a username
+      user = await this.userModel.findOne({ userName: identifier }).exec();
+    }
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      throw new UnauthorizedException('Invalid Credentials');
+    }
+
+    const token = this.jwtService.sign({ id: user._id });
     return { token };
   }
 }
