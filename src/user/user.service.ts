@@ -29,4 +29,9 @@ export class UserService {
     user.password = undefined;
     return user;
   }
+
+  async deleteAccount(id: string): Promise<{ message: string }> {
+    await this.userModel.findByIdAndDelete(id);
+    return { message: 'Account deleted Successfully' };
+  }
 }
