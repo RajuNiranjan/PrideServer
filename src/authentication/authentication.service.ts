@@ -53,7 +53,6 @@ export class AuthenticationService {
     const { usernameOremail, password } = loginDto;
     let user: User | null = null;
 
-    // Check if the usernameOremail is an email
     if (/\S+@\S+\.\S+/.test(usernameOremail)) {
       user = await this.userModel.findOne({ email: usernameOremail }).exec();
     } else {

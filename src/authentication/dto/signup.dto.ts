@@ -4,6 +4,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsString,
+  Matches,
 } from 'class-validator';
 import { GenderIdentity } from 'src/utils/enums';
 
@@ -13,11 +14,14 @@ export class SignUpDto {
   userName: string;
 
   @IsNotEmpty()
-  @IsEmail()
+  @IsEmail({}, { message: 'email must be a valid email address' })
   email: string;
 
   @IsNotEmpty()
   @IsString()
+  @Matches(/^\d{10}$/, {
+    message: 'mobileNumber must be a valid 10-digit number',
+  })
   mobileNumber: string;
 
   @IsNotEmpty()
@@ -34,6 +38,10 @@ export class SignUpDto {
 
   @IsNotEmpty()
   @IsString()
+  @Matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/, {
+    message:
+      'Password must be 8-15 characters long, contain at least one uppercase letter, one number, and one special character.',
+  })
   password: string;
 
   @IsNotEmpty()
