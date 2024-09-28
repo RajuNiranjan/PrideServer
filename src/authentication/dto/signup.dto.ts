@@ -38,6 +38,10 @@ export class SignUpDto {
 
   @IsNotEmpty()
   @IsString()
+  profileBannerPic: string;
+
+  @IsNotEmpty()
+  @IsString()
   @Matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/, {
     message:
       'Password must be 8-15 characters long, contain at least one uppercase letter, one number, and one special character.',

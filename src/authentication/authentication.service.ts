@@ -19,8 +19,16 @@ export class AuthenticationService {
   ) {}
 
   async signup(signUpDto: SignUpDto): Promise<{ token: string }> {
-    const { dob, email, gender, mobileNumber, password, profilePic, userName } =
-      signUpDto;
+    const {
+      dob,
+      email,
+      gender,
+      mobileNumber,
+      password,
+      profilePic,
+      profileBannerPic,
+      userName,
+    } = signUpDto;
 
     const existUser = await this.userModel.findOne({
       $or: [{ email }, { userName }, { mobileNumber }],
@@ -42,6 +50,7 @@ export class AuthenticationService {
       mobileNumber,
       password: hashPassword,
       profilePic,
+      profileBannerPic,
       userName,
     });
 

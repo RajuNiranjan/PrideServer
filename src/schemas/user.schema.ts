@@ -23,6 +23,9 @@ export class User extends Document {
   profilePic: string;
 
   @Prop({ required: true })
+  profileBannerPic: string;
+
+  @Prop({ required: true })
   password: string;
 
   @Prop({ default: false })
