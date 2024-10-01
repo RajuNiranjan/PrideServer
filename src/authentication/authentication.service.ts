@@ -1,5 +1,6 @@
 import {
   BadGatewayException,
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -31,6 +32,26 @@ export class AuthenticationService {
       userName,
       acceptTerms,
     } = signUpDto;
+
+    const birthDate = new Date(dob);
+
+    const today = new Date();
+
+    const age = today.getFullYear() - birthDate.getFullYear();
+
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    const isAdult =
+      age > 18 ||
+      (age === 18 && monthDifference > 0) ||
+      (age === 18 &&
+        monthDifference === 0 &&
+        today.getDate() >= birthDate.getDate());
+
+    if (!isAdult) {
+      throw new BadRequestException(
+        'You must be at least 18 years old to sign up',
+      );
+    }
 
     const existUser = await this.userModel.findOne({
       $or: [{ email }, { userName }, { mobileNumber }],
