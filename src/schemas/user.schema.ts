@@ -33,6 +33,12 @@ export class User extends Document {
 
   @Prop({ default: false })
   isPrivate: boolean;
+
+  @Prop({
+    default: false,
+    required: [true, 'You must accept the Terms and Conditions'],
+  })
+  acceptTerms: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

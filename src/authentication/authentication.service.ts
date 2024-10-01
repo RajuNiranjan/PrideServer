@@ -1,4 +1,5 @@
 import {
+  BadGatewayException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -28,6 +29,7 @@ export class AuthenticationService {
       profilePic,
       profileBannerPic,
       userName,
+      acceptTerms,
     } = signUpDto;
 
     const existUser = await this.userModel.findOne({
@@ -43,6 +45,10 @@ export class AuthenticationService {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
+    if (!acceptTerms) {
+      throw new BadGatewayException('You must accept the Terms and Conditions');
+    }
+
     const newUser = await this.userModel.create({
       dob,
       email,
@@ -52,6 +58,7 @@ export class AuthenticationService {
       profilePic,
       profileBannerPic,
       userName,
+      acceptTerms,
     });
 
     const token = this.jwtService.sign({ id: newUser._id });

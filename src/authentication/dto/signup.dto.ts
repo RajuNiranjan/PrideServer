@@ -55,4 +55,8 @@ export class SignUpDto {
   @IsNotEmpty()
   @IsBoolean()
   isPrivate: boolean = false;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  acceptTerms: boolean = false;
 }
