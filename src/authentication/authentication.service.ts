@@ -20,7 +20,7 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signup(signUpDto: SignUpDto): Promise<{ token: string }> {
+  async signup(signUpDto: SignUpDto): Promise<{ token: string; user: any }> {
     const {
       dob,
       email,
@@ -83,10 +83,10 @@ export class AuthenticationService {
     });
 
     const token = this.jwtService.sign({ id: newUser._id });
-    return { token };
+    return { token, user: newUser };
   }
 
-  async logIn(loginDto: LogInDto): Promise<{ token: string }> {
+  async logIn(loginDto: LogInDto): Promise<{ token: string; user: any }> {
     const { usernameOremail, password } = loginDto;
     let user: User | null = null;
 
@@ -107,6 +107,6 @@ export class AuthenticationService {
     }
 
     const token = this.jwtService.sign({ id: user._id });
-    return { token };
+    return { token, user };
   }
 }

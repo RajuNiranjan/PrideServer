@@ -8,12 +8,12 @@ export class AuthenticationController {
   constructor(private readonly userService: AuthenticationService) {}
 
   @Post('register')
-  SignUp(@Body() singUpDto: SignUpDto): Promise<{ token: string }> {
+  SignUp(@Body() singUpDto: SignUpDto): Promise<{ token: string; user: any }> {
     return this.userService.signup(singUpDto);
   }
 
   @Post('login')
-  LogIn(@Body() loginDto: LogInDto): Promise<{ token: string }> {
+  LogIn(@Body() loginDto: LogInDto): Promise<{ token: string; user: any }> {
     return this.userService.logIn(loginDto);
   }
 }
