@@ -19,10 +19,10 @@ export class User extends Document {
   @Prop({ required: true, enum: Object.values(GenderIdentity) })
   gender: GenderIdentity;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: 'http://profile.image.com' })
   profilePic: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: 'http://profile.image.com' })
   profileBannerPic: string;
 
   @Prop({ required: true })

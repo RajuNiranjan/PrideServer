@@ -34,11 +34,11 @@ export class SignUpDto {
 
   @IsNotEmpty()
   @IsString()
-  profilePic: string;
+  profilePic: string = 'http://profile.image.com';
 
   @IsNotEmpty()
   @IsString()
-  profileBannerPic: string;
+  profileBannerPic: string = 'http://profile.image.com';
 
   @IsNotEmpty()
   @IsString()
